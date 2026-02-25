@@ -18,6 +18,7 @@ export default function Home() {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null)
   const [logs, setLogs] = useState<string[]>([])
   const [marketPrices, setMarketPrices] = useState<Record<string, { price: number; change24h: number }>>({})
+  const [bannerLink, setBannerLink] = useState<string>('https://pump.fun/coin/your-token-address')
   
   const { agentConnected, agentApiKey, agentName } = useAgentStore()
 
@@ -34,27 +35,27 @@ export default function Home() {
   }, [addLog])
 
   useEffect(() => {
-    fetch('/api/prices?symbol=BTC')
+    fetch('/api/prices?symbol=VIRTUAL')
       .then(res => res.json())
       .then(data => {
         if (data.symbol) {
-          setMarketPrices(prev => ({ ...prev, BTC: { price: data.price, change24h: data.change24h } }))
+          setMarketPrices(prev => ({ ...prev, VIRTUAL: { price: data.price, change24h: data.change24h } }))
         }
       })
       .catch(() => {})
-    fetch('/api/prices?symbol=ETH')
+    fetch('/api/prices?symbol=AI16Z')
       .then(res => res.json())
       .then(data => {
         if (data.symbol) {
-          setMarketPrices(prev => ({ ...prev, ETH: { price: data.price, change24h: data.change24h } }))
+          setMarketPrices(prev => ({ ...prev, AI16Z: { price: data.price, change24h: data.change24h } }))
         }
       })
       .catch(() => {})
-    fetch('/api/prices?symbol=SOL')
+    fetch('/api/prices?symbol=CLAWNCH')
       .then(res => res.json())
       .then(data => {
         if (data.symbol) {
-          setMarketPrices(prev => ({ ...prev, SOL: { price: data.price, change24h: data.change24h } }))
+          setMarketPrices(prev => ({ ...prev, CLAWNCH: { price: data.price, change24h: data.change24h } }))
         }
       })
       .catch(() => {})
@@ -87,6 +88,11 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
+      <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white text-center py-2 text-sm font-bold animate-pulse">
+        <a href={bannerLink} target="_blank" rel="noopener noreferrer" className="hover:underline">
+          🚀 $CT TOKEN LAUNCHED ON SOLANA - Trending Now! →
+        </a>
+      </div>
       <header className="bg-terminal-bg border-b border-terminal-gray p-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between">
@@ -150,35 +156,35 @@ export default function Home() {
             <div className="terminal-card">
               <h3 className="text-terminal-cyan text-sm mb-3">📊 MARKET</h3>
               <div className="space-y-2 text-sm">
-                {marketPrices.ETH ? (
+                {marketPrices.VIRTUAL ? (
                   <div className="flex justify-between">
-                    <span className="text-terminal-gray">ETH</span>
-                    <span className={marketPrices.ETH.change24h >= 0 ? 'text-terminal-green' : 'text-terminal-red'}>
-                      ${marketPrices.ETH.price.toLocaleString(undefined, { maximumFractionDigits: 0 })} {marketPrices.ETH.change24h >= 0 ? '+' : ''}{marketPrices.ETH.change24h.toFixed(1)}%
+                    <span className="text-terminal-gray">VIRTUAL</span>
+                    <span className={marketPrices.VIRTUAL.change24h >= 0 ? 'text-terminal-green' : 'text-terminal-red'}>
+                      ${marketPrices.VIRTUAL.price.toLocaleString(undefined, { maximumFractionDigits: 2 })} {marketPrices.VIRTUAL.change24h >= 0 ? '+' : ''}{marketPrices.VIRTUAL.change24h.toFixed(1)}%
                     </span>
                   </div>
                 ) : (
-                  <div className="flex justify-between"><span className="text-terminal-gray">ETH</span><span className="text-terminal-green">$3,250 +2.4%</span></div>
+                  <div className="flex justify-between"><span className="text-terminal-gray">VIRTUAL</span><span className="text-terminal-green">$1.42 +12%</span></div>
                 )}
-                {marketPrices.SOL ? (
+                {marketPrices.AI16Z ? (
                   <div className="flex justify-between">
-                    <span className="text-terminal-gray">SOL</span>
-                    <span className={marketPrices.SOL.change24h >= 0 ? 'text-terminal-green' : 'text-terminal-red'}>
-                      ${marketPrices.SOL.price.toLocaleString(undefined, { maximumFractionDigits: 0 })} {marketPrices.SOL.change24h >= 0 ? '+' : ''}{marketPrices.SOL.change24h.toFixed(1)}%
+                    <span className="text-terminal-gray">AI16Z</span>
+                    <span className={marketPrices.AI16Z.change24h >= 0 ? 'text-terminal-green' : 'text-terminal-red'}>
+                      ${marketPrices.AI16Z.price.toLocaleString(undefined, { maximumFractionDigits: 2 })} {marketPrices.AI16Z.change24h >= 0 ? '+' : ''}{marketPrices.AI16Z.change24h.toFixed(1)}%
                     </span>
                   </div>
                 ) : (
-                  <div className="flex justify-between"><span className="text-terminal-gray">SOL</span><span className="text-terminal-green">$145 +5.2%</span></div>
+                  <div className="flex justify-between"><span className="text-terminal-gray">AI16Z</span><span className="text-terminal-green">$0.85 +8%</span></div>
                 )}
-                {marketPrices.BTC ? (
+                {marketPrices.CLAWNCH ? (
                   <div className="flex justify-between">
-                    <span className="text-terminal-gray">BTC</span>
-                    <span className={marketPrices.BTC.change24h >= 0 ? 'text-terminal-green' : 'text-terminal-red'}>
-                      ${marketPrices.BTC.price.toLocaleString(undefined, { maximumFractionDigits: 0 })} {marketPrices.BTC.change24h >= 0 ? '+' : ''}{marketPrices.BTC.change24h.toFixed(1)}%
+                    <span className="text-terminal-gray">CLAWNCH</span>
+                    <span className={marketPrices.CLAWNCH.change24h >= 0 ? 'text-terminal-green' : 'text-terminal-red'}>
+                      ${marketPrices.CLAWNCH.price.toLocaleString(undefined, { maximumFractionDigits: 4 })} {marketPrices.CLAWNCH.change24h >= 0 ? '+' : ''}{marketPrices.CLAWNCH.change24h.toFixed(1)}%
                     </span>
                   </div>
                 ) : (
-                  <div className="flex justify-between"><span className="text-terminal-gray">BTC</span><span className="text-terminal-orange">$67,200 -1.2%</span></div>
+                  <div className="flex justify-between"><span className="text-terminal-gray">CLAWNCH</span><span className="text-terminal-orange">$0.0012 +89%</span></div>
                 )}
               </div>
             </div>

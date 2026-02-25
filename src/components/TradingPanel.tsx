@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { BrowserProvider, Contract, formatEther } from 'ethers'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 
 interface TradingPanelProps {
