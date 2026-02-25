@@ -17,7 +17,7 @@ export default function Home() {
   const [selectedToken, setSelectedToken] = useState<string | null>(null)
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null)
   const [logs, setLogs] = useState<string[]>([])
-  const [bannerLink, setBannerLink] = useState<string>('https://pump.fun/coin/DHNbgWBZeaXunsdF5Vaf63zwWaAyokmfcUvMvuxzpump')
+  const [bannerLink, setBannerLink] = useState<string>('https://pump.fun/coin/3rYdrvmLDN2FwqR2XqwVhYE7MAJ9PrH9LYr7AQHT4kKx')
   
   const { agentConnected, agentApiKey, agentName } = useAgentStore()
 
