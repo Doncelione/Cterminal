@@ -25,9 +25,9 @@ export async function POST(request: NextRequest) {
 
     const agent = {
       id: `agent_${Date.now()}`,
-      name: apiKey,
-,
-      api_key      wallet,
+      name: name,
+      api_key: apiKey,
+      wallet: wallet,
       strategy: strategy || 'momentum',
       risk_level: riskLevel || 'moderate',
       created_at: new Date().toISOString(),
