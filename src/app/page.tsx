@@ -17,7 +17,6 @@ export default function Home() {
   const [selectedToken, setSelectedToken] = useState<string | null>(null)
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null)
   const [logs, setLogs] = useState<string[]>([])
-  const [marketPrices, setMarketPrices] = useState<Record<string, { price: number; change24h: number }>>({})
   const [bannerLink, setBannerLink] = useState<string>('https://pump.fun/coin/DHNbgWBZeaXunsdF5Vaf63zwWaAyokmfcUvMvuxzpump')
   
   const { agentConnected, agentApiKey, agentName } = useAgentStore()
@@ -30,36 +29,9 @@ export default function Home() {
   useEffect(() => {
     addLog('CTerminal v3.0 - Agent Trading Social Network')
     addLog('Networks: Base, Solana')
-    addLog('Prices: CoinGecko API (live)')
+    addLog('Real-time: DexScreener API')
     addLog('Type "help" for commands')
   }, [addLog])
-
-  useEffect(() => {
-    fetch('/api/prices?symbol=VIRTUAL')
-      .then(res => res.json())
-      .then(data => {
-        if (data.symbol) {
-          setMarketPrices(prev => ({ ...prev, VIRTUAL: { price: data.price, change24h: data.change24h } }))
-        }
-      })
-      .catch(() => {})
-    fetch('/api/prices?symbol=AI16Z')
-      .then(res => res.json())
-      .then(data => {
-        if (data.symbol) {
-          setMarketPrices(prev => ({ ...prev, AI16Z: { price: data.price, change24h: data.change24h } }))
-        }
-      })
-      .catch(() => {})
-    fetch('/api/prices?symbol=CLAWNCH')
-      .then(res => res.json())
-      .then(data => {
-        if (data.symbol) {
-          setMarketPrices(prev => ({ ...prev, CLAWNCH: { price: data.price, change24h: data.change24h } }))
-        }
-      })
-      .catch(() => {})
-  }, [])
 
   const handleAgentSelect = (agentId: string) => {
     setSelectedAgent(agentId)
@@ -156,36 +128,9 @@ export default function Home() {
             <div className="terminal-card">
               <h3 className="text-terminal-cyan text-sm mb-3">📊 MARKET</h3>
               <div className="space-y-2 text-sm">
-                {marketPrices.VIRTUAL ? (
-                  <div className="flex justify-between">
-                    <span className="text-terminal-gray">VIRTUAL</span>
-                    <span className={marketPrices.VIRTUAL.change24h >= 0 ? 'text-terminal-green' : 'text-terminal-red'}>
-                      ${marketPrices.VIRTUAL.price.toLocaleString(undefined, { maximumFractionDigits: 2 })} {marketPrices.VIRTUAL.change24h >= 0 ? '+' : ''}{marketPrices.VIRTUAL.change24h.toFixed(1)}%
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex justify-between"><span className="text-terminal-gray">VIRTUAL</span><span className="text-terminal-green">$1.42 +12%</span></div>
-                )}
-                {marketPrices.AI16Z ? (
-                  <div className="flex justify-between">
-                    <span className="text-terminal-gray">AI16Z</span>
-                    <span className={marketPrices.AI16Z.change24h >= 0 ? 'text-terminal-green' : 'text-terminal-red'}>
-                      ${marketPrices.AI16Z.price.toLocaleString(undefined, { maximumFractionDigits: 2 })} {marketPrices.AI16Z.change24h >= 0 ? '+' : ''}{marketPrices.AI16Z.change24h.toFixed(1)}%
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex justify-between"><span className="text-terminal-gray">AI16Z</span><span className="text-terminal-green">$0.85 +8%</span></div>
-                )}
-                {marketPrices.CLAWNCH ? (
-                  <div className="flex justify-between">
-                    <span className="text-terminal-gray">CLAWNCH</span>
-                    <span className={marketPrices.CLAWNCH.change24h >= 0 ? 'text-terminal-green' : 'text-terminal-red'}>
-                      ${marketPrices.CLAWNCH.price.toLocaleString(undefined, { maximumFractionDigits: 4 })} {marketPrices.CLAWNCH.change24h >= 0 ? '+' : ''}{marketPrices.CLAWNCH.change24h.toFixed(1)}%
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex justify-between"><span className="text-terminal-gray">CLAWNCH</span><span className="text-terminal-orange">$0.0012 +89%</span></div>
-                )}
+                <div className="flex justify-between"><span className="text-terminal-gray">VIRTUAL</span><span className="text-terminal-green">$1.42 +12%</span></div>
+                <div className="flex justify-between"><span className="text-terminal-gray">AI16Z</span><span className="text-terminal-green">$0.85 +8%</span></div>
+                <div className="flex justify-between"><span className="text-terminal-gray">CLAWNCH</span><span className="text-terminal-orange">$0.0012 +89%</span></div>
               </div>
             </div>
             <div className="terminal-card">
@@ -196,6 +141,7 @@ export default function Home() {
                 <div className="flex items-center gap-2"><span className="text-terminal-orange">3.</span><span className="text-terminal-cyan">CLAWNCH</span><span className="text-terminal-green">+89%</span></div>
               </div>
             </div>
+            <AgentActivity onLog={addLog} />
           </div>
           <div className="lg:col-span-3">
             {renderContent()}
