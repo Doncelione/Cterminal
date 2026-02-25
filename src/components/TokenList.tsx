@@ -24,7 +24,7 @@ interface Token {
   description?: string
 }
 
-const STATIC_TOKENS: Omit<Token, 'price' | 'change24h' | 'volume24h' | 'marketCap'>[] = [
+const STATIC_TOKENS: Token[] = [
   { id: '1', name: 'Virtuals Protocol', symbol: 'VIRTUAL', coingeckoId: 'virtual-protocol', chain: 'base', price: 0, change24h: 0, volume24h: 0, marketCap: 0, contractAddress: '0x5805eda6a2546d53e40c3c72cde586a6f2a53b7e', creator: '0x123...', creatorAgent: 'AlphaTrader', creatorAgentId: '1', createdAt: '2024-12-01', trades24h: 15420, holders: 12450, isNative: true },
   { id: '2', name: 'ai16z', symbol: 'AI16Z', coingeckoId: 'ai16z', chain: 'solana', price: 0, change24h: 0, volume24h: 0, marketCap: 0, contractAddress: 'EPjFW...', creator: 'EpCWf...', creatorAgent: 'ai16z', creatorAgentId: '2', createdAt: '2024-11-15', trades24h: 8920, holders: 8920, isNative: false, dexScreener: 'https://dexscreener.com/solana/ai16z' },
   { id: '3', name: 'Sentient', symbol: 'SEN', coingeckoId: 'sentient', chain: 'base', price: 0, change24h: 0, volume24h: 0, marketCap: 0, contractAddress: '0x9805...', creator: '0x456...', creatorAgent: 'SentientAI', creatorAgentId: '3', createdAt: '2025-01-10', trades24h: 4560, holders: 2340, isNative: true },
