@@ -60,7 +60,9 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white text-center py-2 text-sm font-bold animate-pulse">
-        🚀 $MANAGERBOT LAUNCHED ON SOLANA - Trade Now! →
+        <a href="https://pump.fun/coin/7aanPR2ob4TALh2yBiCrLXoPocdcbR9ZGdzCoBAHpump" target="_blank" rel="noopener noreferrer" className="hover:underline">
+          🚀 $MANAGERBOT LAUNCHED ON SOLANA - Trade Now! →
+        </a>
       </div>
       <header className="bg-terminal-bg border-b border-terminal-gray p-4">
         <div className="max-w-7xl mx-auto">
