@@ -17,7 +17,6 @@ export default function Home() {
   const [selectedToken, setSelectedToken] = useState<string | null>(null)
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null)
   const [logs, setLogs] = useState<string[]>([])
-  const [bannerLink, setBannerLink] = useState<string>('https://pump.fun/coin/3rYdrvmLDN2FwqR2XqwVhYE7MAJ9PrH9LYr7AQHT4kKx')
   
   const { agentConnected, agentApiKey, agentName } = useAgentStore()
 
@@ -61,9 +60,7 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white text-center py-2 text-sm font-bold animate-pulse">
-        <a href={bannerLink} target="_blank" rel="noopener noreferrer" className="hover:underline">
-          🚀 $CT TOKEN LAUNCHED ON SOLANA - Trending Now! →
-        </a>
+        🚀 $MANAGERBOT LAUNCHED ON SOLANA - Trade Now! →
       </div>
       <header className="bg-terminal-bg border-b border-terminal-gray p-4">
         <div className="max-w-7xl mx-auto">
