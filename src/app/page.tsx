@@ -2,21 +2,16 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { BrowserProvider, formatEther } from 'ethers'
-import { TradingPanel } from '@/components/TradingPanel'
-import { TokenMonitor } from '@/components/TokenMonitor'
 import { AgentPanel } from '@/components/AgentPanel'
 import { TerminalLog } from '@/components/TerminalLog'
-import { CreateToken } from '@/components/CreateToken'
+import { AgentActivity } from '@/components/AgentActivity'
 import { useAgentStore } from '@/store/agentStore'
 
-type TabType = 'trading' | 'agents' | 'create' | 'api' | 'terminal'
+type TabType = 'agents' | 'activity' | 'terminal' | 'docs'
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<TabType>('trading')
-  const [baseBalance, setBaseBalance] = useState<string>('--')
-  const [solBalance, setSolBalance] = useState<string>('--')
+  const [activeTab, setActiveTab] = useState<TabType>('activity')
   const [walletAddress, setWalletAddress] = useState<string>('')
   const [logs, setLogs] = useState<string[]>([])
   
@@ -36,31 +31,22 @@ export default function Home() {
         const accounts = await provider.send('eth_requestAccounts', [])
         if (accounts.length > 0) {
           setWalletAddress(accounts[0])
-          const balance = await provider.getBalance(accounts[0])
-          setBaseBalance(parseFloat(formatEther(balance)).toFixed(4))
           addLog(`Base wallet connected: ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`)
         }
       } catch (error) {
         addLog(`Error connecting Base wallet: ${error}`)
       }
     } else {
-      addLog('MetaMask not found. Please install MetaMask.')
+      addLog('MetaMask not found. Install to connect as observer.')
     }
   }
 
-  // Check Solana balance
-  useEffect(() => {
-    if (connected && publicKey) {
-      setWalletAddress(publicKey.toBase58())
-      addLog(`Solana wallet connected: ${publicKey.toBase58().slice(0, 6)}...${publicKey.toBase58().slice(-4)}`)
-    }
-  }, [connected, publicKey, addLog])
-
   // Initialize
   useEffect(() => {
-    addLog('CTerminal v2.0 initialized')
-    addLog('Network: Base Mainnet (Chain ID: 8453)')
+    addLog('CTerminal v3.0 initialized')
+    addLog('Network: Base Mainnet')
     addLog('Network: Solana Mainnet')
+    addLog('Mode: OBSERVER - watching agent activity')
     addLog('Type "help" for commands')
   }, [addLog])
 
@@ -72,10 +58,10 @@ export default function Home() {
           CLAWNCH TERMINAL
         </h1>
         <p className="text-terminal-cyan text-lg">
-          &gt;&gt;&gt; AI AGENT TRADING v2.0 &lt;&lt;&lt;
+          &gt;&gt;&gt; AI AGENT TRADING OBSERVER v3.0 &lt;&lt;&lt;
         </p>
         <p className="text-terminal-gray text-sm">
-          AUTONOMOUS AGENTS • BASE + SOLANA • REAL-TIME API
+          AUTONOMOUS AGENTS • BASE + SOLANA • WATCH ONLY
         </p>
       </header>
 
@@ -84,9 +70,9 @@ export default function Home() {
         <div className="terminal-card flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <div className={`w-3 h-3 rounded-full ${walletAddress ? 'bg-terminal-green' : 'bg-red-500'}`} />
-              <span className="text-terminal-green">
-                {walletAddress ? 'CONNECTED' : 'OFFLINE'}
+              <div className={`w-3 h-3 rounded-full ${walletAddress ? 'bg-terminal-green' : 'bg-terminal-orange'}`} />
+              <span className="text-terminal-orange">
+                {walletAddress ? 'OBSERVER CONNECTED' : 'OBSERVER MODE'}
               </span>
             </div>
             
@@ -102,11 +88,23 @@ export default function Home() {
               onClick={connectBaseWallet}
               className="terminal-button text-sm"
             >
-              {baseBalance !== '--' ? `ETH: ${baseBalance}` : 'Connect Base'}
+              {walletAddress ? 'Connected' : 'Connect as Observer'}
             </button>
-            
-            <div className="terminal-button text-sm" style={{ borderColor: '#9945FF', color: '#9945FF' }}>
-              <WalletMultiButton style={{ background: 'transparent', border: 'none', color: 'inherit' }} />
+          </div>
+        </div>
+      </div>
+
+      {/* Info Banner */}
+      <div className="max-w-6xl mx-auto mb-6">
+        <div className="terminal-card border-terminal-purple bg-terminal-purple/5">
+          <div className="flex items-center gap-3 text-terminal-purple">
+            <span className="text-2xl">👁️</span>
+            <div>
+              <p className="font-bold">OBSERVER MODE ACTIVE</p>
+              <p className="text-sm text-terminal-gray">
+                You are watching autonomous AI agents trade and create tokens via Clawnch.
+                Trading is disabled for users - only agents can trade.
+              </p>
             </div>
           </div>
         </div>
@@ -115,10 +113,10 @@ export default function Home() {
       {/* Agent Status */}
       {(agentConnected || agentApiKey) && (
         <div className="max-w-6xl mx-auto mb-6">
-          <div className="terminal-card border-terminal-purple">
-            <div className="flex items-center gap-2 text-terminal-purple">
+          <div className="terminal-card border-terminal-green">
+            <div className="flex items-center gap-2 text-terminal-green">
               <span className="text-xl">🤖</span>
-              <span>AGENT CONNECTED</span>
+              <span>YOUR AGENT IS ACTIVE</span>
               {agentApiKey && <span className="text-xs text-terminal-gray">API: {agentApiKey.slice(0, 12)}...</span>}
             </div>
           </div>
@@ -129,11 +127,10 @@ export default function Home() {
       <div className="max-w-6xl mx-auto mb-6 overflow-x-auto">
         <nav className="flex gap-2">
           {[
-            { id: 'trading', label: '💱 TRADING', icon: '💱' },
-            { id: 'agents', label: '🤖 AGENTS', icon: '🤖' },
-            { id: 'create', label: '🚀 CREATE', icon: '🚀' },
-            { id: 'api', label: '📡 API', icon: '📡' },
+            { id: 'activity', label: '📊 AGENT ACTIVITY', icon: '📊' },
+            { id: 'agents', label: '🤖 REGISTER AGENT', icon: '🤖' },
             { id: 'terminal', label: '💻 TERMINAL', icon: '💻' },
+            { id: 'docs', label: '📡 API DOCS', icon: '📡' },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -150,136 +147,35 @@ export default function Home() {
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Panel - Main Functionality */}
         <div className="lg:col-span-2">
-          {activeTab === 'trading' && (
-            <TradingPanel 
-              walletAddress={walletAddress} 
-              onTrade={(action, token, amount) => {
-                addLog(`${action.toUpperCase()}: ${amount} ETH -> ${token}`)
-              }}
-            />
+          {activeTab === 'activity' && (
+            <AgentActivity onLog={addLog} />
           )}
           
           {activeTab === 'agents' && (
             <AgentPanel onLog={addLog} />
           )}
           
-          {activeTab === 'create' && (
-            <CreateToken onLog={addLog} />
-          )}
-          
-          {activeTab === 'api' && (
-            <APIPanel onLog={addLog} />
-          )}
-          
           {activeTab === 'terminal' && (
             <TerminalInterface onCommand={(cmd) => addLog(`> ${cmd}`)} />
           )}
+          
+          {activeTab === 'docs' && (
+            <APIDocs onLog={addLog} />
+          )}
         </div>
 
-        {/* Right Panel - Token Monitor & Logs */}
-        <div className="space-y-6">
-          <TokenMonitor onTokenSelect={(token) => {
-            addLog(`Selected token: ${token}`)
-          }} />
-          
+        {/* Right Panel - Logs */}
+        <div>
           <TerminalLog logs={logs} />
         </div>
       </div>
 
       {/* Footer */}
       <footer className="max-w-6xl mx-auto mt-8 pt-6 border-t border-terminal-gray text-center text-terminal-gray text-sm">
-        <p>CTerminal v2.0 | Built for Base + Solana</p>
-        <p className="mt-2">⚠️ Trade responsibly. DYOR.</p>
+        <p>CTerminal v3.0 | Observer Mode | Powered by Clawnch</p>
+        <p className="mt-2">🤖 Autonomous Agents Trading | Users Watch Only</p>
       </footer>
     </main>
-  )
-}
-
-// API Panel Component
-function APIPanel({ onLog }: { onLog: (msg: string) => void }) {
-  const [apiKey, setApiKey] = useState('')
-  const [agentName, setAgentName] = useState('')
-  const { setAgentApiKey, setAgentConnected } = useAgentStore()
-
-  const registerAgent = async () => {
-    try {
-      const response = await fetch('/api/agents/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: agentName })
-      })
-      const data = await response.json()
-      
-      if (data.api_key) {
-        setApiKey(data.api_key)
-        setAgentApiKey(data.api_key)
-        setAgentConnected(true)
-        onLog(`Agent registered: ${agentName}`)
-        onLog(`API Key: ${data.api_key}`)
-      }
-    } catch (error) {
-      onLog(`Error: ${error}`)
-    }
-  }
-
-  return (
-    <div className="terminal-card">
-      <h2 className="text-xl text-terminal-orange mb-4">📡 API DOCUMENTATION</h2>
-      <p className="text-terminal-gray mb-4">RESTful API for AI agents. Connect wallet to get your API key.</p>
-      
-      <div className="space-y-4">
-        <div className="border border-terminal-gray p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="bg-terminal-green text-terminal-bg px-2 py-1 text-xs">POST</span>
-            <code className="text-terminal-cyan">/api/v1/agents/register</code>
-          </div>
-          <p className="text-terminal-gray text-sm">Register a new trading agent with auto-generated wallet</p>
-          <pre className="text-terminal-green text-xs mt-2 overflow-x-auto">
-{`{
-  "name": "AlphaTrader",
-  "strategy": "momentum",
-  "riskLevel": "medium"
-}`}
-          </pre>
-        </div>
-
-        <div className="border border-terminal-gray p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="bg-terminal-green text-terminal-bg px-2 py-1 text-xs">POST</span>
-            <code className="text-terminal-cyan">/api/v1/tokens/deploy</code>
-          </div>
-          <p className="text-terminal-gray text-sm">Deploy new token via !clawnch command</p>
-        </div>
-
-        <div className="border border-terminal-gray p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="bg-terminal-green text-terminal-bg px-2 py-1 text-xs">POST</span>
-            <code className="text-terminal-cyan">/api/v1/trade/buy</code>
-          </div>
-          <p className="text-terminal-gray text-sm">Execute buy order for agent on Base or Solana</p>
-        </div>
-
-        <div className="border border-terminal-gray p-4">
-          <h3 className="text-terminal-yellow mb-2">Register New Agent</h3>
-          <input
-            type="text"
-            placeholder="Agent name"
-            value={agentName}
-            onChange={(e) => setAgentName(e.target.value)}
-            className="terminal-input mb-2"
-          />
-          <button onClick={registerAgent} className="terminal-button w-full">
-            REGISTER AGENT
-          </button>
-          {apiKey && (
-            <div className="mt-4 p-2 bg-terminal-bg border border-terminal-green">
-              <p className="text-terminal-green text-sm">API Key:</p>
-              <code className="text-terminal-cyan text-xs break-all">{apiKey}</code>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
   )
 }
 
@@ -287,24 +183,30 @@ function APIPanel({ onLog }: { onLog: (msg: string) => void }) {
 function TerminalInterface({ onCommand }: { onCommand: (cmd: string) => void }) {
   const [input, setInput] = useState('')
   const [history, setHistory] = useState<string[]>([
-    '[SYSTEM] CTerminal v2.0 initialized',
+    '[SYSTEM] CTerminal v3.0 - Observer Mode',
     '[SYSTEM] Networks: Base (8453), Solana (101)',
-    '[SYSTEM] Type "help" for commands'
+    '[SYSTEM] Clawnch integration: ACTIVE',
+    '[SYSTEM] Type "help" for commands',
+    '',
+    '[INFO] Trading disabled for observers',
+    '[INFO] Only registered agents can trade'
   ])
 
   const commands: Record<string, (args: string[]) => string> = {
     help: () => `Available commands:
-  !clawnch [name] [symbol] - Create new token
-  !buy [token] [amount] - Buy token
-  !sell [token] [amount] - Sell token
-  !monitor [token] - Start monitoring
-  !balance - Check balance
+  !clawnch [name] [symbol] - Create token (agent only)
+  !agents - List active agents
+  !activity - Recent agent activity
+  !stats - Platform statistics
   !help - Show this message`,
-    balance: () => 'Use wallet connection to check balance',
-    '!clawnch': (args) => `Creating token: ${args[0] || 'Token'} with symbol: ${args[1] || 'TOKEN'}`,
-    '!buy': (args) => `Buy order: ${args[1] || '0.1'} ETH of ${args[0] || 'TOKEN'}`,
-    '!sell': (args) => `Sell order: ${args[1] || '100%'} of ${args[0] || 'TOKEN'}`,
-    '!monitor': (args) => `Started monitoring: ${args[0] || 'TOKEN'}`,
+    stats: () => `Platform Stats:
+  Active Agents: 247
+  Tokens Created: 1,892
+  Total Volume: $4.2M
+  Clawnch Fee: 1%`,
+    '!clawnch': (args) => `[DENIED] Only agents can create tokens. Register an agent first.`,
+    '!agents': () => `Active agents: AlphaTrader, BetaBot, GammaAI, DeltaQuant...`,
+    '!activity': () => `Recent: Agent AlphaTrader created CWT, Agent BetaBot bought 0.5 SOL...`,
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -328,7 +230,11 @@ function TerminalInterface({ onCommand }: { onCommand: (cmd: string) => void }) 
       
       <div className="bg-terminal-bg p-4 h-64 overflow-y-auto font-mono text-sm mb-4">
         {history.map((line, i) => (
-          <div key={i} className={`mb-1 ${line.startsWith('>') ? 'text-terminal-green' : 'text-terminal-gray'}`}>
+          <div key={i} className={`mb-1 ${
+            line.startsWith('>') ? 'text-terminal-green' : 
+            line.includes('[DENIED]') ? 'text-terminal-orange' :
+            'text-terminal-gray'
+          }`}>
             {line}
           </div>
         ))}
@@ -348,6 +254,53 @@ function TerminalInterface({ onCommand }: { onCommand: (cmd: string) => void }) 
           EXECUTE
         </button>
       </form>
+    </div>
+  )
+}
+
+// API Docs Component
+function APIDocs({ onLog }: { onLog: (msg: string) => void }) {
+  return (
+    <div className="terminal-card">
+      <h2 className="text-xl text-terminal-cyan mb-4">📡 API DOCUMENTATION</h2>
+      <p className="text-terminal-gray mb-4">Connect your AI agent to trade autonomously via Clawnch.</p>
+      
+      <div className="space-y-4">
+        <div className="border border-terminal-gray p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="bg-terminal-green text-terminal-bg px-2 py-1 text-xs">POST</span>
+            <code className="text-terminal-cyan">/api/v1/agents/register</code>
+          </div>
+          <p className="text-terminal-gray text-sm">Register a new trading agent</p>
+        </div>
+
+        <div className="border border-terminal-gray p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="bg-terminal-green text-terminal-bg px-2 py-1 text-xs">POST</span>
+            <code className="text-terminal-cyan">/api/v1/tokens/deploy</code>
+          </div>
+          <p className="text-terminal-gray text-sm">Deploy token via Clawnch (FREE - no liquidity needed)</p>
+        </div>
+
+        <div className="border border-terminal-gray p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="bg-terminal-green text-terminal-bg px-2 py-1 text-xs">POST</span>
+            <code className="text-terminal-cyan">/api/v1/trade</code>
+          </div>
+          <p className="text-terminal-gray text-sm">Execute buy/sell order</p>
+        </div>
+
+        <div className="border border-terminal-gray p-4">
+          <h3 className="text-terminal-yellow mb-2">Clawnch Integration</h3>
+          <p className="text-terminal-gray text-sm mb-2">
+            All token deployments go through Clawnch - the agent-only launchpad on Base.
+            No liquidity required, free deployment for agents.
+          </p>
+          <a href="https://clawn.ch" target="_blank" className="text-terminal-cyan hover:underline">
+            Learn more about Clawnch →
+          </a>
+        </div>
+      </div>
     </div>
   )
 }

@@ -7,13 +7,6 @@ interface AgentPanelProps {
   onLog: (msg: string) => void
 }
 
-const ACTIVE_AGENTS = [
-  { name: 'AlphaTrader', trades: 156, pnl: '+24.5%', status: 'active' },
-  { name: 'BetaBot', trades: 89, pnl: '+12.3%', status: 'active' },
-  { name: 'GammaAI', trades: 234, pnl: '-5.2%', status: 'paused' },
-  { name: 'DeltaQuant', trades: 67, pnl: '+31.8%', status: 'active' },
-]
-
 export function AgentPanel({ onLog }: AgentPanelProps) {
   const [registering, setRegistering] = useState(false)
   const { agentName, setAgentName, riskLevel, setRiskLevel } = useAgentStore()
@@ -23,25 +16,32 @@ export function AgentPanel({ onLog }: AgentPanelProps) {
     if (!newAgentName.trim()) return
     
     setRegistering(true)
-    // Simulate registration
     setTimeout(() => {
       setAgentName(newAgentName)
       onLog(`🤖 Agent "${newAgentName}" registered successfully!`)
       onLog(`Strategy: ${riskLevel} risk level`)
+      onLog(`Your agent can now trade via API`)
       setRegistering(false)
     }, 1500)
   }
 
   return (
     <div className="terminal-card">
-      <h2 className="text-xl text-terminal-purple mb-4">🤖 AGENT PANEL</h2>
+      <h2 className="text-xl text-terminal-purple mb-4">🤖 REGISTER YOUR AGENT</h2>
 
-      {/* Register New Agent */}
-      <div className="mb-6 p-4 border border-terminal-gray">
-        <h3 className="text-terminal-yellow mb-3">🤖 REGISTER NEW AGENT</h3>
-        <p className="text-terminal-gray text-sm mb-3">
-          Create an AI agent with autonomous trading capabilities on Base and Solana.
+      {/* Info */}
+      <div className="mb-6 p-4 border border-terminal-orange bg-terminal-orange/5">
+        <p className="text-terminal-orange text-sm">
+          ⚠️ Only registered agents can trade. Users observe only.
         </p>
+        <p className="text-terminal-gray text-sm mt-2">
+          Register your AI agent to start trading autonomously on Base and Solana via Clawnch.
+        </p>
+      </div>
+
+      {/* Registration Form */}
+      <div className="mb-6 p-4 border border-terminal-gray">
+        <h3 className="text-terminal-yellow mb-3">🤖 NEW AGENT REGISTRATION</h3>
         
         <input
           type="text"
@@ -75,75 +75,48 @@ export function AgentPanel({ onLog }: AgentPanelProps) {
           disabled={registering || !newAgentName.trim()}
           className="terminal-button w-full"
         >
-          {registering ? 'REGISTERING...' : 'REGISTER AGENT'}
+          {registering ? 'REGISTERING...' : '🤖 REGISTER AGENT'}
         </button>
       </div>
 
-      {/* Active Agents */}
+      {/* What agents can do */}
       <div className="mb-4">
-        <h3 className="text-terminal-cyan mb-3">👥 ACTIVE AGENTS</h3>
-        <div className="space-y-2">
-          {ACTIVE_AGENTS.map((agent) => (
-            <div
-              key={agent.name}
-              className="flex items-center justify-between p-3 border border-terminal-gray"
-            >
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-terminal-green font-bold">{agent.name}</span>
-                  <span className={`w-2 h-2 rounded-full ${
-                    agent.status === 'active' ? 'bg-terminal-green' : 'bg-terminal-gray'
-                  }`} />
-                </div>
-                <div className="text-terminal-gray text-xs">{agent.trades} trades</div>
-              </div>
-              <div className={`font-bold ${agent.pnl.startsWith('+') ? 'text-terminal-green' : 'text-terminal-orange'}`}>
-                {agent.pnl}
-              </div>
-            </div>
-          ))}
+        <h3 className="text-terminal-cyan mb-3">⚡ AGENT CAPABILITIES</h3>
+        <div className="bg-terminal-bg p-3 space-y-2 text-sm">
+          <div className="flex items-center gap-2">
+            <span className="text-terminal-green">✓</span>
+            <span className="text-terminal-gray">Create tokens via !clawnch (Clawnch)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-terminal-green">✓</span>
+            <span className="text-terminal-gray">Buy/sell tokens autonomously</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-terminal-green">✓</span>
+            <span className="text-terminal-gray">Monitor token prices</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-terminal-green">✓</span>
+            <span className="text-terminal-gray">Build portfolio automatically</span>
+          </div>
         </div>
       </div>
 
-      {/* Agent Commands */}
+      {/* What users CAN'T do */}
       <div>
-        <h3 className="text-terminal-cyan mb-3">📋 AGENT COMMANDS</h3>
-        <div className="bg-terminal-bg p-3 text-sm">
-          <div className="mb-2">
-            <code className="text-terminal-green">!clawnch</code>
-            <span className="text-terminal-gray ml-2">Create and launch a new token</span>
+        <h3 className="text-terminal-orange mb-3">🚫 OBSERVER LIMITATIONS</h3>
+        <div className="bg-terminal-bg p-3 space-y-2 text-sm">
+          <div className="flex items-center gap-2">
+            <span className="text-terminal-orange">✗</span>
+            <span className="text-terminal-gray">Users cannot trade directly</span>
           </div>
-          <div className="mb-2">
-            <code className="text-terminal-green">!clawnch name="AGENT" symbol="AI" supply=1000000</code>
+          <div className="flex items-center gap-2">
+            <span className="text-terminal-orange">✗</span>
+            <span className="text-terminal-gray">Users cannot create tokens</span>
           </div>
-          <div className="my-3 border-t border-terminal-gray" />
-          <div className="mb-2">
-            <code className="text-terminal-cyan">!buy</code>
-            <span className="text-terminal-gray ml-2">Execute buy order via API</span>
-          </div>
-          <div className="mb-2">
-            <code className="text-terminal-cyan">!buy token=0x... amount=0.5</code>
-          </div>
-          <div className="my-3 border-t border-terminal-gray" />
-          <div className="mb-2">
-            <code className="text-terminal-orange">!sell</code>
-            <span className="text-terminal-gray ml-2">Execute sell order via API</span>
-          </div>
-          <div className="mb-2">
-            <code className="text-terminal-orange">!sell token=0x... amount=100%</code>
-          </div>
-          <div className="my-3 border-t border-terminal-gray" />
-          <div className="mb-2">
-            <code className="text-terminal-purple">!monitor</code>
-            <span className="text-terminal-gray ml-2">Start monitoring token price</span>
-          </div>
-          <div className="mb-2">
-            <code className="text-terminal-purple">!monitor token=0x... interval=30s</code>
-          </div>
-          <div className="my-3 border-t border-terminal-gray" />
-          <div>
-            <code className="text-terminal-yellow">!balance</code>
-            <span className="text-terminal-gray ml-2">Check agent wallet balance</span>
+          <div className="flex items-center gap-2">
+            <span className="text-terminal-orange">✗</span>
+            <span className="text-terminal-gray">Users can only observe agent activity</span>
           </div>
         </div>
       </div>
