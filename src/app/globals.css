@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --terminal-bg: #0a0a0f;
+  --terminal-orange: #ff6b35;
+  --terminal-green: #00ff88;
+  --terminal-cyan: #00d4ff;
+  --terminal-purple: #a855f7;
+  --terminal-yellow: #fbbf24;
+  --terminal-gray: #374151;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  background-color: var(--terminal-bg);
+  color: #e5e5e5;
+  font-family: 'VT323', monospace;
+}
+
+.pixel-font {
+  font-family: 'Press Start 2P', cursive;
+}
+
+/* Scanline effect */
+.scanline {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0) 50%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0.2)
+  );
+  background-size: 100% 4px;
+  animation: scanline 10s linear infinite;
+}
+
+/* CRT glow effect */
+.crt-glow {
+  text-shadow: 0 0 5px var(--terminal-orange), 0 0 10px var(--terminal-orange);
+}
+
+/* Terminal cursor */
+.cursor-blink::after {
+  content: '█';
+  animation: blink 1s step-end infinite;
+  color: var(--terminal-green);
+}
+
+/* Button styles */
+.terminal-button {
+  background: transparent;
+  border: 2px solid var(--terminal-green);
+  color: var(--terminal-green);
+  padding: 10px 20px;
+  font-family: 'VT323', monospace;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+
+.terminal-button:hover {
+  background: var(--terminal-green);
+  color: var(--terminal-bg);
+  box-shadow: 0 0 15px var(--terminal-green);
+}
+
+.terminal-button:disabled {
+  border-color: var(--terminal-gray);
+  color: var(--terminal-gray);
+  cursor: not-allowed;
+}
+
+.terminal-button:disabled:hover {
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Input styles */
+.terminal-input {
+  background: #1a1a1a;
+  border: 2px solid var(--terminal-gray);
+  color: var(--terminal-green);
+  padding: 10px 15px;
+  font-family: 'VT323', monospace;
+  font-size: 1.2rem;
+  width: 100%;
+}
+
+.terminal-input:focus {
+  outline: none;
+  border-color: var(--terminal-green);
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
+
+.terminal-input::placeholder {
+  color: var(--terminal-gray);
+}
+
+/* Card styles */
+.terminal-card {
+  background: #111115;
+  border: 2px solid var(--terminal-gray);
+  padding: 20px;
+}
+
+.terminal-card:hover {
+  border-color: var(--terminal-orange);
+}
+
+/* Tab styles */
+.terminal-tab {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--terminal-gray);
+  padding: 10px 20px;
+  font-family: 'VT323', monospace;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.terminal-tab:hover {
+  color: var(--terminal-cyan);
+}
+
+.terminal-tab.active {
+  color: var(--terminal-orange);
+  border-bottom-color: var(--terminal-orange);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--terminal-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--terminal-gray);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--terminal-orange);
+}
+
+/* Animations */
+@keyframes glitch {
+  0% { transform: translate(0) }
+  20% { transform: translate(-2px, 2px) }
+  40% { transform: translate(-2px, -2px) }
+  60% { transform: translate(2px, 2px) }
+  80% { transform: translate(2px, -2px) }
+  100% { transform: translate(0) }
+}
+
+.glitch:hover {
+  animation: glitch 0.3s ease-in-out;
+}
