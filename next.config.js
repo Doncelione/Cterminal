@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: 'standalone',
   images: {
     domains: ['ipfs.io', 'arweave.net', 'imgbb.com'],
   },
