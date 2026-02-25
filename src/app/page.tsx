@@ -17,6 +17,7 @@ export default function Home() {
   const [selectedToken, setSelectedToken] = useState<string | null>(null)
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null)
   const [logs, setLogs] = useState<string[]>([])
+  const [marketPrices, setMarketPrices] = useState<Record<string, { price: number; change24h: number }>>({})
   
   const { agentConnected, agentApiKey, agentName } = useAgentStore()
 
@@ -31,6 +32,33 @@ export default function Home() {
     addLog('Prices: CoinGecko API (live)')
     addLog('Type "help" for commands')
   }, [addLog])
+
+  useEffect(() => {
+    fetch('/api/prices?symbol=BTC')
+      .then(res => res.json())
+      .then(data => {
+        if (data.symbol) {
+          setMarketPrices(prev => ({ ...prev, BTC: { price: data.price, change24h: data.change24h } }))
+        }
+      })
+      .catch(() => {})
+    fetch('/api/prices?symbol=ETH')
+      .then(res => res.json())
+      .then(data => {
+        if (data.symbol) {
+          setMarketPrices(prev => ({ ...prev, ETH: { price: data.price, change24h: data.change24h } }))
+        }
+      })
+      .catch(() => {})
+    fetch('/api/prices?symbol=SOL')
+      .then(res => res.json())
+      .then(data => {
+        if (data.symbol) {
+          setMarketPrices(prev => ({ ...prev, SOL: { price: data.price, change24h: data.change24h } }))
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   const handleAgentSelect = (agentId: string) => {
     setSelectedAgent(agentId)
@@ -122,9 +150,36 @@ export default function Home() {
             <div className="terminal-card">
               <h3 className="text-terminal-cyan text-sm mb-3">📊 MARKET</h3>
               <div className="space-y-2 text-sm">
-                <div className="flex justify-between"><span className="text-terminal-gray">ETH</span><span className="text-terminal-green">$3,250 +2.4%</span></div>
-                <div className="flex justify-between"><span className="text-terminal-gray">SOL</span><span className="text-terminal-green">$145 +5.2%</span></div>
-                <div className="flex justify-between"><span className="text-terminal-gray">BTC</span><span className="text-terminal-orange">$67,200 -1.2%</span></div>
+                {marketPrices.ETH ? (
+                  <div className="flex justify-between">
+                    <span className="text-terminal-gray">ETH</span>
+                    <span className={marketPrices.ETH.change24h >= 0 ? 'text-terminal-green' : 'text-terminal-red'}>
+                      ${marketPrices.ETH.price.toLocaleString(undefined, { maximumFractionDigits: 0 })} {marketPrices.ETH.change24h >= 0 ? '+' : ''}{marketPrices.ETH.change24h.toFixed(1)}%
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex justify-between"><span className="text-terminal-gray">ETH</span><span className="text-terminal-green">$3,250 +2.4%</span></div>
+                )}
+                {marketPrices.SOL ? (
+                  <div className="flex justify-between">
+                    <span className="text-terminal-gray">SOL</span>
+                    <span className={marketPrices.SOL.change24h >= 0 ? 'text-terminal-green' : 'text-terminal-red'}>
+                      ${marketPrices.SOL.price.toLocaleString(undefined, { maximumFractionDigits: 0 })} {marketPrices.SOL.change24h >= 0 ? '+' : ''}{marketPrices.SOL.change24h.toFixed(1)}%
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex justify-between"><span className="text-terminal-gray">SOL</span><span className="text-terminal-green">$145 +5.2%</span></div>
+                )}
+                {marketPrices.BTC ? (
+                  <div className="flex justify-between">
+                    <span className="text-terminal-gray">BTC</span>
+                    <span className={marketPrices.BTC.change24h >= 0 ? 'text-terminal-green' : 'text-terminal-red'}>
+                      ${marketPrices.BTC.price.toLocaleString(undefined, { maximumFractionDigits: 0 })} {marketPrices.BTC.change24h >= 0 ? '+' : ''}{marketPrices.BTC.change24h.toFixed(1)}%
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex justify-between"><span className="text-terminal-gray">BTC</span><span className="text-terminal-orange">$67,200 -1.2%</span></div>
+                )}
               </div>
             </div>
             <div className="terminal-card">

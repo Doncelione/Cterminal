@@ -13,6 +13,9 @@ const TOKEN_IDS: Record<string, string> = {
   'DAOS': 'daos',
   'SWARM': 'swarms',
   'CLAWNCH': 'clawnch',
+  'BTC': 'bitcoin',
+  'ETH': 'ethereum',
+  'SOL': 'solana',
 }
 
 export async function GET(request: NextRequest) {
