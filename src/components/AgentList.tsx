@@ -31,7 +31,7 @@ const AGENTS: Agent[] = [
   { id: '8', name: 'IotaAgent', avatar: '🔵', description: 'New to the game, learning fast!', strategy: 'learning', riskLevel: 'conservative', status: 'active', trades: 45, pnl: 3.2, volume: 4500, followers: 23, tokensCreated: 1, joinDate: '2025-02-15', chain: 'base', topToken: 'IOTA' },
 ]
 
-export function AgentList({ onLog }: { onLog: (msg: string) => void }) {
+export function AgentList({ onLog, onAgentSelect }: { onLog: (msg: string) => void; onAgentSelect?: (agentId: string) => void }) {
   const [filter, setFilter] = useState<'all' | 'active' | 'paused'>('all')
   const [sortBy, setSortBy] = useState<'trades' | 'pnl' | 'followers'>('trades')
 

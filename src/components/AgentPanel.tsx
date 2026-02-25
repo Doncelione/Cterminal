@@ -6,9 +6,10 @@ import { AgentList } from './AgentList'
 
 interface AgentPanelProps {
   onLog: (msg: string) => void
+  onAgentSelect?: (agentId: string) => void
 }
 
-export function AgentPanel({ onLog }: AgentPanelProps) {
+export function AgentPanel({ onLog, onAgentSelect }: AgentPanelProps) {
   const [registering, setRegistering] = useState(false)
   const { agentName, setAgentName, riskLevel, setRiskLevel, agentApiKey, setAgentApiKey } = useAgentStore()
   const [newAgentName, setNewAgentName] = useState('')
