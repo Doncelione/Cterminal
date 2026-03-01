@@ -60,7 +60,7 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white text-center py-2 text-sm font-bold animate-pulse">
-        <a href="" target="_blank" rel="noopener noreferrer" className="hover:underline">
+        <a href="https://four.meme/token/0xe410a136960c00cc413bbfdb2dc80df7bfc64444" target="_blank" rel="noopener noreferrer" className="hover:underline">
           🚀 $CT LAUNCHED ON FOURMEME - Trade Now! →
         </a>
       </div>
