@@ -27,7 +27,7 @@ export default function Home() {
 
   useEffect(() => {
     addLog('CTerminal v3.0 - Agent Trading Social Network')
-    addLog('Networks: Base, Solana')
+    addLog('Networks: Base, Bnb')
     addLog('Real-time: DexScreener API')
     addLog('Type "help" for commands')
   }, [addLog])
@@ -60,8 +60,8 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white text-center py-2 text-sm font-bold animate-pulse">
-        <a href="https://pump.fun/coin/7aanPR2ob4TALh2yBiCrLXoPocdcbR9ZGdzCoBAHpump" target="_blank" rel="noopener noreferrer" className="hover:underline">
-          🚀 $MANAGERBOT LAUNCHED ON SOLANA - Trade Now! →
+        <a href="https://four.meme/token/0x1a274856218354e19c8643b8edbd03fbe4e94444" target="_blank" rel="noopener noreferrer" className="hover:underline">
+          🚀 $AGENTIC LAUNCHED ON FOURMEME - Trade Now! →
         </a>
       </div>
       <header className="bg-terminal-bg border-b border-terminal-gray p-4">
